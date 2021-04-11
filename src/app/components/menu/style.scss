@@ -1,45 +1,17 @@
-html {
-
-    box-sizing: border-box;
-    --bgColorMenu : #1d1d27;
-    --duration: .7s;    
-
-}
-
-html *,
-html *::before,
-html *::after {
-
-    box-sizing: inherit;
-
-}
-
-body{
-    
-    margin: 0;
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffb457;
-    -webkit-tap-highlight-color: transparent;
-    transition: background-color var(--duration);
-
-}
-
 .menu{
 
     margin: 0;
     display: flex;
-    /* Works well with 100% width  */
-    width: 32.05em;
+    width: 100%;
     font-size: 1.5em;
     padding: 0 2.85em;
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     align-items: center;
     justify-content: center;
-    background-color: var(--bgColorMenu);
+    background-color: var(--bgColorMenu, var(--vscode-activityBar-background));
     
 }
 
@@ -126,7 +98,7 @@ body{
     position: absolute;
     clip-path: url(#menu);
     will-change: transform;
-    background-color: var(--bgColorMenu);
+    background-color: var(--bgColorMenu, var(--vscode-activityBar-background));
     transition: transform var(--timeOut , var(--duration));
     
 }

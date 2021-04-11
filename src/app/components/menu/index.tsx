@@ -1,55 +1,41 @@
 import * as React from "react";
-import { FunctionComponent, useState } from "react";
+import { useState, useRef, FunctionComponent, MutableRefObject } from "react";
 import { MenuItem } from "./menu-item";
 import "./style.scss";
 
 export const Menu: FunctionComponent = () => {
   const [active, setActive] = useState("welcome");
 
-  // const body = document.body;
-  // const bgColorsBody = ["#ffb457", "#ff96bd", "#9999fb", "#ffe797", "#cffff1"];
-  // const menu = body.querySelector(".menu");
-  // const menuItems = menu.querySelectorAll(".menu__item");
-  // const menuBorder = menu.querySelector(".menu__border");
-  // let activeItem = menu.querySelector(".active");
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuBorderRef = useRef<HTMLDivElement | null>(null);
 
-  const onClickItem = (event: MouseEvent, id: string) => {
-    if (active !== id) setActive(id);
+  const offsetMenuBorder = (element: MutableRefObject<HTMLButtonElement>) => {
+    if (!menuRef.current || !menuBorderRef.current) return;
+
+    const offsetActiveItem = element.current.getBoundingClientRect();
+    const left =
+      Math.floor(
+        offsetActiveItem.left -
+          menuRef.current.offsetLeft -
+          (menuBorderRef.current.offsetWidth - offsetActiveItem.width) / 2
+      ) + "px";
+    menuBorderRef.current.style.transform = `translate3d(${left}, 0 , 0)`;
   };
 
-  // function clickItem(item, index) {
+  const onClickItem = (
+    event: MouseEvent,
+    id: string,
+    element: MutableRefObject<HTMLButtonElement>
+  ) => {
+    if (active === id) return;
+    setActive(id);
 
-  //     menu.style.removeProperty("--timeOut");
-
-  //     body.style.backgroundColor = bgColorsBody[index];
-  //     offsetMenuBorder(activeItem, menuBorder);
-
-  // }
-
-  const offsetMenuBorder(element, menuBorder) {
-
-       const offsetActiveItem = element.getBoundingClientRect();
-       const left = Math.floor(offsetActiveItem.left - menu.offsetLeft - (menuBorder.offsetWidth  - offsetActiveItem.width) / 2) +  "px";
-       menuBorder.style.transform = `translate3d(${left}, 0 , 0)`;
-
-  }
-
-  // offsetMenuBorder(activeItem, menuBorder);
-
-  // menuItems.forEach((item, index) => {
-
-  //     item.addEventListener("click", () => clickItem(item, index));
-
-  // })
-
-  // window.addEventListener("resize", () => {
-  //     offsetMenuBorder(activeItem, menuBorder);
-  //     menu.style.setProperty("--timeOut", "none");
-  // });
+    offsetMenuBorder(element);
+  };
 
   return (
     <>
-      <nav className="menu">
+      <nav className="menu" ref={menuRef}>
         <MenuItem
           id="welcome"
           icon="menu"
@@ -86,7 +72,7 @@ export const Menu: FunctionComponent = () => {
           onClick={onClickItem}
         />
 
-        <div className="menu__border"></div>
+        <div className="menu__border" ref={menuBorderRef} />
       </nav>
 
       <div className="svg-container">
