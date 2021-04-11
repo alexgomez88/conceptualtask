@@ -4,6 +4,8 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 
 
 /**@type {import('webpack').Configuration}*/
@@ -17,6 +19,10 @@ const vsCodeConfig = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(scss|css)$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      }
     ],
   },
   resolve: {
@@ -30,7 +36,10 @@ const vsCodeConfig = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       'process.env.MY_ENV': JSON.stringify(process.env.MY_ENV),
-    })
+    }),
+    new MiniCssExtractPlugin(
+      
+    )
 ],
 };
 module.exports = vsCodeConfig;
