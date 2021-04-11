@@ -4,7 +4,7 @@
     display: flex;
     width: 100%;
     font-size: 1.5em;
-    padding: 0 2.85em;
+    padding: 0 1rem;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -36,8 +36,8 @@
     
     content: "";
     z-index: -1;
-    width: 4.2em;
-    height: 4.2em;
+    width: 2.6rem;
+    height: 2.6rem;
     border-radius: 50%;
     position: absolute;
     transform: scale(0);
@@ -55,7 +55,7 @@
 .menu__item.active::before{
     
     transform: scale(1);
-    background-color: var(--bgColorItem);
+    background-color: var(--bgColorItem, aqua);
 
 }
 
@@ -93,8 +93,8 @@
 
     left: 0;
     bottom: 99%;
-    width: 10.9em;
-    height: 2.4em;
+    width: 7.3rem;
+    height: 1.6rem;
     position: absolute;
     clip-path: url(#menu);
     will-change: transform;
@@ -104,7 +104,6 @@
 }
 
 .svg-container {
-
     width: 0;
     height: 0;
 }

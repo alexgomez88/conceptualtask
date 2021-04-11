@@ -6,41 +6,51 @@ import "./style.scss";
 export const Menu: FunctionComponent = () => {
   const [active, setActive] = useState("welcome");
 
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const menuBorderRef = useRef<HTMLDivElement | null>(null);
+  let menuRef: HTMLElement | null = null;
+  let menuActiveRef: HTMLButtonElement | null = null;
+  let menuBorderRef: HTMLDivElement | null = null;
 
-  const offsetMenuBorder = (element: MutableRefObject<HTMLButtonElement>) => {
-    if (!menuRef.current || !menuBorderRef.current) return;
+  const offsetMenuBorder = () => {
+    if (!menuRef || !menuBorderRef || !menuActiveRef) return;
 
-    const offsetActiveItem = element.current.getBoundingClientRect();
+    const offsetActiveItem = menuActiveRef.getBoundingClientRect();
     const left =
       Math.floor(
         offsetActiveItem.left -
-          menuRef.current.offsetLeft -
-          (menuBorderRef.current.offsetWidth - offsetActiveItem.width) / 2
+          menuRef.offsetLeft -
+          (menuBorderRef.offsetWidth - offsetActiveItem.width) / 2
       ) + "px";
-    menuBorderRef.current.style.transform = `translate3d(${left}, 0 , 0)`;
+
+    menuBorderRef.style.transform = `translate3d(${left}, 0 , 0)`;
   };
 
-  const onClickItem = (
-    event: MouseEvent,
-    id: string,
-    element: MutableRefObject<HTMLButtonElement>
-  ) => {
+  const setMenuActiveRef = (ref: HTMLButtonElement) => {
+    console.log(ref);
+    menuActiveRef = ref;
+    offsetMenuBorder();
+  };
+
+  const onClickItem = (id: string) => {
+    console.log(id, active);
     if (active === id) return;
     setActive(id);
-
-    offsetMenuBorder(element);
   };
 
   return (
-    <>
-      <nav className="menu" ref={menuRef}>
+    <div>
+      <nav
+        className="menu"
+        ref={(ref) => {
+          menuRef = ref;
+          offsetMenuBorder();
+        }}
+      >
         <MenuItem
           id="welcome"
           icon="menu"
           active={active}
           onClick={onClickItem}
+          setMenuActiveRef={setMenuActiveRef}
           bgcolor="#ff8c00"
         />
         <MenuItem
@@ -48,6 +58,7 @@ export const Menu: FunctionComponent = () => {
           icon="inbox"
           active={active}
           onClick={onClickItem}
+          setMenuActiveRef={setMenuActiveRef}
           bgcolor="#f54888"
         />
         <MenuItem
@@ -56,6 +67,7 @@ export const Menu: FunctionComponent = () => {
           active={active}
           bgcolor="#4343f5"
           onClick={onClickItem}
+          setMenuActiveRef={setMenuActiveRef}
         />
         <MenuItem
           id="teams"
@@ -63,6 +75,7 @@ export const Menu: FunctionComponent = () => {
           active={active}
           bgcolor="#e0b115"
           onClick={onClickItem}
+          setMenuActiveRef={setMenuActiveRef}
         />
         <MenuItem
           id="sbout"
@@ -70,9 +83,16 @@ export const Menu: FunctionComponent = () => {
           active={active}
           bgcolor="#65ddb7"
           onClick={onClickItem}
+          setMenuActiveRef={setMenuActiveRef}
         />
 
-        <div className="menu__border" ref={menuBorderRef} />
+        <div
+          className="menu__border"
+          ref={(ref) => {
+            menuBorderRef = ref;
+            offsetMenuBorder();
+          }}
+        />
       </nav>
 
       <div className="svg-container">
@@ -90,6 +110,6 @@ export const Menu: FunctionComponent = () => {
           </clipPath>
         </svg>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FunctionComponent, MouseEventHandler, useRef } from "react";
+import { FunctionComponent, MouseEventHandler, useRef, forwardRef } from "react";
 import { Icons } from "../index";
 
 type MenuItemProps = {
@@ -8,33 +8,27 @@ type MenuItemProps = {
   active: string;
   bgcolor: string;
   onClick: any;
+  setMenuActiveRef: any
 };
 
-export const MenuItem: FunctionComponent<MenuItemProps> = ({
-  id,
-  icon,
-  bgcolor,
-  active,
-  onClick,
-}: MenuItemProps) => {
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+export const MenuItem: FunctionComponent<MenuItemProps> = (props: MenuItemProps) => {
+  const {id, icon, active, bgcolor, onClick, setMenuActiveRef} = props;
+  const isActive = id === active
+  const className = isActive ? "menu__item active" : "menu__item";
 
-  const className = id === active ? "menu__item active" : "menu__item";
-
-  const onClickItem: MouseEventHandler = (event) => {
-    console.log(id);
-    onClick(event, id, buttonRef);
-  };
+  const onClickItem = (event: React.SyntheticEvent) => {
+    onClick(id);
+  }
 
   return (
     <button
       id={id}
-      ref={buttonRef}
+      ref={ref => {if(isActive) setMenuActiveRef(ref) }}
       className={className}
       data-bgcolor={bgcolor}
       onClick={onClickItem}
     >
       <Icons icon={icon} />
     </button>
-  );
+ );
 };
