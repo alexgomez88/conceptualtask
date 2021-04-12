@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
+
 import { MainViewProvider } from './MainViewProvider';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
 	const mainViewProvider = new MainViewProvider(context.extensionUri);
 
