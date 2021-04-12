@@ -2,6 +2,7 @@ html {
 
     box-sizing: border-box;
     --bgColorItem: #ff6600;
+    --timeOut: 0s;
     --duration: .7s;    
 
 }
@@ -34,4 +35,15 @@ body{
     width: 100vw;
     position: relative;
     background-color: var(--vscode-editor-background);
+}
+
+#main-screen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: blueviolet;
+    margin-bottom: 2.6rem;
+    padding-bottom: 2rem;
 }

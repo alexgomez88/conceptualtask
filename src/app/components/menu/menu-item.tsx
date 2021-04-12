@@ -1,34 +1,47 @@
 import * as React from "react";
-import { FunctionComponent, MouseEventHandler, useRef, forwardRef } from "react";
+import {
+  FunctionComponent,
+  MouseEventHandler,
+  useRef,
+  forwardRef,
+} from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { Icons } from "../index";
 
 type MenuItemProps = {
-  id: string;
+  link: string;
   icon: string;
-  active: string;
-  bgcolor: string;
-  onClick: any;
-  setMenuActiveRef: any
+  setMenuActiveRef: any;
 };
 
-export const MenuItem: FunctionComponent<MenuItemProps> = (props: MenuItemProps) => {
-  const {id, icon, active, bgcolor, onClick, setMenuActiveRef} = props;
-  const isActive = id === active
-  const className = isActive ? "menu__item active" : "menu__item";
+export const MenuItem: FunctionComponent<MenuItemProps> = (
+  props: MenuItemProps
+) => {
+  const { link, icon, setMenuActiveRef } = props;
+  const menuItemRef = useRef(null);
+  const location = useLocation();
 
-  const onClickItem = (event: React.SyntheticEvent) => {
-    onClick(id);
-  }
+    React.useEffect(() => {
+    const menuItemEffect = () => {
+      if (location.pathname !== link) return;
+      setMenuActiveRef(menuItemRef, false);
+    };
+
+    menuItemEffect();
+  }, [menuItemRef.current]);
+
+  const onClick = () => setMenuActiveRef(menuItemRef);
 
   return (
-    <button
-      id={id}
-      ref={ref => {if(isActive) setMenuActiveRef(ref) }}
-      className={className}
-      data-bgcolor={bgcolor}
-      onClick={onClickItem}
+    <NavLink
+      to={link}
+      exact
+      innerRef={menuItemRef}
+      className="menu__item"
+      activeClassName="active"
+      onClick={onClick}
     >
       <Icons icon={icon} />
-    </button>
- );
+    </NavLink>
+  );
 };

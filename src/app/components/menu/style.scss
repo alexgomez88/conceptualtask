@@ -28,8 +28,13 @@
     will-change: transform;
     justify-content: center;
     padding: 0.55em 0 0.85em;
+    outline: none;
     transition: transform var(--timeOut , var(--duration));
     
+}
+
+.menu__item:focus{
+    outline: none;
 }
 
 .menu__item::before{

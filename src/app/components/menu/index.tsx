@@ -4,95 +4,69 @@ import { MenuItem } from "./menu-item";
 import "./style.scss";
 
 export const Menu: FunctionComponent = () => {
-  const [active, setActive] = useState("welcome");
+  const menuRef = useRef<HTMLElement | null>(null);
+  const menuBorderRef = useRef<HTMLDivElement | null>(null);
+  let menuActiveRef = useRef<HTMLAnchorElement | null>(null);
 
-  let menuRef: HTMLElement | null = null;
-  let menuActiveRef: HTMLButtonElement | null = null;
-  let menuBorderRef: HTMLDivElement | null = null;
+  const offsetMenuBorder = (animated = true) => {
+    if (!menuRef.current || !menuBorderRef.current || !menuActiveRef.current)
+      return;
 
-  const offsetMenuBorder = () => {
-    if (!menuRef || !menuBorderRef || !menuActiveRef) return;
-
-    const offsetActiveItem = menuActiveRef.getBoundingClientRect();
+    const offsetActiveItem = menuActiveRef.current.getBoundingClientRect();
     const left =
       Math.floor(
         offsetActiveItem.left -
-          menuRef.offsetLeft -
-          (menuBorderRef.offsetWidth - offsetActiveItem.width) / 2
+          menuRef.current.offsetLeft -
+          (menuBorderRef.current.offsetWidth - offsetActiveItem.width) / 2
       ) + "px";
 
-    menuBorderRef.style.transform = `translate3d(${left}, 0 , 0)`;
+    if (!animated) menuBorderRef.current.style.setProperty("--timeOut", "0");
+    else menuBorderRef.current.style.setProperty("--timeOut", ".7s");
+
+    console.log("execute2");
+
+    menuBorderRef.current.style.transform = `translate3d(${left}, 0 , 0)`;
   };
 
-  const setMenuActiveRef = (ref: HTMLButtonElement) => {
-    console.log(ref);
+  React.useEffect(() => {
+    const initOffset = () => offsetMenuBorder(false);
+
+    window.addEventListener("resize", initOffset);
+    return () => {
+      window.removeEventListener("resize", initOffset);
+    };
+  });
+
+  const setMenuActiveRef = (ref: any, animated = true) => {
     menuActiveRef = ref;
-    offsetMenuBorder();
-  };
-
-  const onClickItem = (id: string) => {
-    console.log(id, active);
-    if (active === id) return;
-    setActive(id);
+    offsetMenuBorder(animated);
   };
 
   return (
     <div>
-      <nav
-        className="menu"
-        ref={(ref) => {
-          menuRef = ref;
-          offsetMenuBorder();
-        }}
-      >
+      <nav className="menu" ref={menuRef}>
+        <MenuItem link="/" icon="menu" setMenuActiveRef={setMenuActiveRef} />
         <MenuItem
-          id="welcome"
-          icon="menu"
-          active={active}
-          onClick={onClickItem}
-          setMenuActiveRef={setMenuActiveRef}
-          bgcolor="#ff8c00"
-        />
-        <MenuItem
-          id="activities"
           icon="inbox"
-          active={active}
-          onClick={onClickItem}
+          link="/tasks"
           setMenuActiveRef={setMenuActiveRef}
-          bgcolor="#f54888"
         />
         <MenuItem
-          id="pomodoros"
           icon="pile"
-          active={active}
-          bgcolor="#4343f5"
-          onClick={onClickItem}
+          link="/pomodoro"
           setMenuActiveRef={setMenuActiveRef}
         />
         <MenuItem
-          id="teams"
+          link="/teams"
           icon="layout"
-          active={active}
-          bgcolor="#e0b115"
-          onClick={onClickItem}
           setMenuActiveRef={setMenuActiveRef}
         />
         <MenuItem
-          id="sbout"
+          link="/about"
           icon="picture"
-          active={active}
-          bgcolor="#65ddb7"
-          onClick={onClickItem}
           setMenuActiveRef={setMenuActiveRef}
         />
-
-        <div
-          className="menu__border"
-          ref={(ref) => {
-            menuBorderRef = ref;
-            offsetMenuBorder();
-          }}
-        />
+        <div className="menu__border" ref={menuBorderRef} />
       </nav>
 
       <div className="svg-container">
